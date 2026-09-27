@@ -5,7 +5,8 @@ export enum ETheme {
 
 export enum EChangeFormat {
   Percent = 'percent',
-  Pips = 'pips',
+  /** Absolute change of the rate, e.g. `+0.0025`. */
+  Value = 'value',
 }
 
 export enum ERateSource {
@@ -39,7 +40,7 @@ export enum EPickerTarget {
 }
 
 export enum ESection {
-  Bookmarked = 'bookmarked',
+  Featured = 'featured',
   Tracking = 'tracking',
   Suggested = 'suggested',
 }

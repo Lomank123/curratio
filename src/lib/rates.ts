@@ -1,4 +1,5 @@
 import { EChangeFormat } from './enums';
+import { rateDecimals } from './format';
 import type { UsdRates } from './types';
 
 /** How many `quote` units one `base` buys, or null when either rate is unknown. */
@@ -23,7 +24,7 @@ export type Change = { up: boolean; text: string };
 
 const MINUS = '−';
 
-/** Change of `now` against the previous-day reference, as `+0.21%` or `+12.3 pip`. */
+/** Change of `now` against the previous-day reference: `+0.21%`, or `+0.0025` as a value. */
 export function dailyChange(
   now: number | null,
   prev: number | null,
@@ -33,9 +34,13 @@ export function dailyChange(
   const delta = now - prev;
   const up = delta >= 0;
   const sign = up ? '+' : MINUS;
-  if (format === EChangeFormat.Pips) {
-    const pip = now >= 10 ? 0.01 : 0.0001;
-    return { up, text: `${sign}${Math.abs(delta / pip).toFixed(1)} pip` };
+  if (format === EChangeFormat.Value) {
+    const d = rateDecimals(now);
+    const abs = Math.abs(delta).toLocaleString('en-US', {
+      minimumFractionDigits: d,
+      maximumFractionDigits: d,
+    });
+    return { up, text: `${sign}${abs}` };
   }
   return { up, text: `${sign}${Math.abs((delta / prev) * 100).toFixed(2)}%` };
 }

@@ -154,6 +154,9 @@
     max-height: 230px;
     overflow-y: auto;
     margin-top: var(--space-3);
+    /* Scroll in the modal body's right gutter so the scrollbar doesn't cover the rows. */
+    margin-right: calc(-1 * var(--space-4));
+    padding-right: var(--space-4);
   }
   .list button {
     display: flex;

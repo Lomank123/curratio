@@ -7,13 +7,13 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     version: '1.0.0',
     items: [
-      'Track currency pairs with daily change',
-      'Bookmark pairs to pin them on top',
+      'Track currency pairs with daily change, as percent or actual value',
+      'Feature pairs to pin them on top, drag to reorder',
       'Built-in two-way converter with currency search',
       'Primary currency with suggested pairs',
       'Convert selected prices on any page',
       'Optionally convert all prices on a page',
-      'Refresh every 1–3 minutes, dark and light themes',
+      'Background refresh from every 30 seconds to hourly, dark and light themes',
     ],
   },
 ];

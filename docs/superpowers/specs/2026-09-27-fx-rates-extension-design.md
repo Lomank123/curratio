@@ -490,3 +490,31 @@ extension in Chrome and testing on real pages is a manual step for the user, des
 - The daily-change pill stays, using the §4 reference.
 - No tests in v1.
 - Source code link: https://github.com/Lomank123/curratio
+
+## 14. Revision — review round 2 (supersedes earlier sections where they conflict)
+
+- **Bookmarked → Featured.** `ESection.Featured`. Featured rows can be dragged to reorder (HTML5
+  drag and drop). Order = order of starred pairs in `curratio:pairs`. A newly starred pair goes
+  to the end of Featured. Copy: "Add to Featured" / "Remove from Featured".
+- **Refresh options** are back to the design's set: `30s | 1m | 5m | 15m | 1h | Off`, stored as
+  `settings.refreshSec` (`0 | 30 | 60 | 300 | 900 | 3600`), replacing `intervalMin`.
+  - Off means no alarm. Rates update only from the top-bar timer, or once on startup if nothing
+    is cached yet.
+  - The popup's stale check on open is skipped when Off.
+- **Pips replaced by actual value**: the "Show change as actual value" toggle (Display) sets
+  `settings.changeFormat` to `EChangeFormat.Value | Percent`. Value mode shows the raw rate delta
+  with the rate's own decimals (`rateDecimals`), e.g. `+0.0025`.
+- **`settings.showSuggested`** (default true) is a "Show suggested pairs" toggle under Display.
+- **Stored settings are merged over defaults** (`withDefaults`), so added fields get defaults
+  and removed ones are dropped.
+- **Settings modal:**
+  - The primary currency now has a hint: "Prices you select on web pages are converted into this
+    currency, and suggested pairs are built around it."
+  - The About section is removed. About and Changelog are only in the ⋮ menu.
+- **About / Changelog:** no back button. Their titles show icons (`info` / `file`).
+- **Track a pair:** no title icon.
+- **Modal layout:** the header is fixed and only the body scrolls, with its own right gutter, so
+  the scrollbar never covers content. The picker list scrolls inside that gutter.
+- **Top bar:**
+  - The calculator button no longer changes colour when active.
+  - The brand icon is sized to the toolbar buttons (`--control`, 26 px).

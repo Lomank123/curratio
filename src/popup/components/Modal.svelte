@@ -5,7 +5,6 @@
   export let title: string;
   export let icon: IconName | null = null;
   export let onClose: () => void;
-  export let onBack: (() => void) | null = null;
   /** Pickers stack above other modals. */
   export let layer: 'modal' | 'picker' = 'modal';
 </script>
@@ -15,18 +14,15 @@
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div class="panel" role="dialog" aria-label={title} on:click|stopPropagation>
     <div class="head">
-      {#if onBack}
-        <button class="ghost-btn back" on:click={onBack} title="Back" aria-label="Back">
-          <Icon name="chevronLeft" size={14} stroke={2.5} />
-        </button>
-      {/if}
       <h2>
         {#if icon}<Icon name={icon} class="muted" />{/if}
         {title}
       </h2>
       <button class="ghost-btn" on:click={onClose} title="Close" aria-label="Close">✕</button>
     </div>
-    <slot />
+    <div class="body">
+      <slot />
+    </div>
   </div>
 </div>
 
@@ -44,26 +40,27 @@
   .overlay.picker {
     z-index: 30;
   }
+  /* The header stays put; only the body scrolls. The body owns the right padding so the
+     scrollbar (overlay or classic) sits in that gutter instead of on top of the content. */
   .panel {
     width: var(--panel-w);
     max-height: 100%;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: var(--space-4);
+    padding: var(--space-4) 0 var(--space-4) var(--space-4);
     box-shadow: var(--shadow-menu);
   }
   .head {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     gap: var(--space-2);
     margin-bottom: var(--space-4);
-  }
-  .back {
-    width: 24px;
-    height: 24px;
-    padding: 0;
+    padding-right: var(--space-4);
   }
   h2 {
     flex: 1;
@@ -72,5 +69,10 @@
     gap: var(--space-3);
     margin: 0;
     font-size: var(--fs-lg);
+  }
+  .body {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: var(--space-4);
   }
 </style>

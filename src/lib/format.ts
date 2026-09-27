@@ -8,6 +8,14 @@ export function formatRate(v: number | null): string {
   return v.toLocaleString(EN, { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
+/** Decimals that show a rate with the same precision as `formatRate`. */
+export function rateDecimals(v: number): number {
+  if (v >= 100) return 2;
+  if (v >= 10) return 3;
+  if (v >= 0.01) return 4;
+  return Math.max(4, 3 - Math.floor(Math.log10(v)));
+}
+
 /** Minor units of a currency (JPY → 0, USD → 2, KWD → 3). */
 export function currencyDigits(code: string): number {
   try {

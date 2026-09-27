@@ -6,12 +6,27 @@ export function defaultSettings(locale: string): Settings {
   return {
     primary: currencyForLocale(locale),
     theme: null,
-    intervalMin: 1,
+    refreshSec: 60,
+    showSuggested: true,
     changeFormat: EChangeFormat.Percent,
     selectionConvert: true,
     pageConvert: false,
     pageConvertTarget: null,
   };
+}
+
+/**
+ * Stored settings merged over defaults: fields added later get their default and fields that no
+ * longer exist are dropped.
+ */
+export function withDefaults(stored: Partial<Settings> | undefined, locale: string): Settings {
+  const defaults = defaultSettings(locale);
+  if (!stored) return defaults;
+  const merged = { ...defaults };
+  for (const key of Object.keys(defaults) as (keyof Settings)[]) {
+    if (key in stored) Object.assign(merged, { [key]: stored[key] });
+  }
+  return merged;
 }
 
 /** Default "other side" for a pair against the primary currency. */
@@ -43,7 +58,7 @@ export function defaultUi(primary: string): UiState {
     calcOpen: true,
     calc: { from: counterpart(primary), to: primary, amount: '100', side: ECalcSide.From },
     collapsed: {
-      [ESection.Bookmarked]: false,
+      [ESection.Featured]: false,
       [ESection.Tracking]: false,
       [ESection.Suggested]: false,
     },

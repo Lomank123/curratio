@@ -1,5 +1,5 @@
 import { EMessageType } from '../lib/enums';
-import { defaultPairs, defaultSettings, defaultUi } from '../state/defaults';
+import { defaultPairs, defaultUi, withDefaults } from '../state/defaults';
 import { STORAGE_KEYS } from '../state/keys';
 import { onChange, read, write } from '../state/storage';
 import { refresh } from './refresh';
@@ -7,9 +7,9 @@ import { refresh } from './refresh';
 const ALARM = 'curratio-refresh';
 
 async function seedDefaults(): Promise<void> {
-  let settings = await read(STORAGE_KEYS.settings);
-  if (!settings) {
-    settings = defaultSettings(navigator.language);
+  const stored = await read(STORAGE_KEYS.settings);
+  const settings = withDefaults(stored, navigator.language);
+  if (JSON.stringify(stored) !== JSON.stringify(settings)) {
     await write(STORAGE_KEYS.settings, settings);
   }
   if (!(await read(STORAGE_KEYS.pairs))) {
@@ -20,10 +20,16 @@ async function seedDefaults(): Promise<void> {
   }
 }
 
+/** Background refresh on `refreshSec`; 0 means manual refresh only, so no alarm. */
 async function ensureAlarm(): Promise<void> {
   const settings = await read(STORAGE_KEYS.settings);
-  const periodInMinutes = settings?.intervalMin ?? 1;
+  const refreshSec = settings?.refreshSec ?? 60;
   const existing = await chrome.alarms.get(ALARM);
+  if (refreshSec === 0) {
+    if (existing) await chrome.alarms.clear(ALARM);
+    return;
+  }
+  const periodInMinutes = refreshSec / 60;
   if (existing?.periodInMinutes === periodInMinutes) return;
   await chrome.alarms.create(ALARM, { periodInMinutes });
 }
@@ -31,7 +37,9 @@ async function ensureAlarm(): Promise<void> {
 async function boot(): Promise<void> {
   await seedDefaults();
   await ensureAlarm();
-  await refresh();
+  const settings = await read(STORAGE_KEYS.settings);
+  // With refresh off, only fetch when there is nothing cached yet.
+  if (settings?.refreshSec || !(await read(STORAGE_KEYS.rates))) await refresh();
 }
 
 chrome.runtime.onInstalled.addListener(() => void boot());

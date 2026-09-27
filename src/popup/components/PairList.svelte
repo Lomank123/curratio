@@ -33,11 +33,12 @@
     </div>
   {/if}
   <PairSection
-    section={ESection.Bookmarked}
-    label="Bookmarked"
+    section={ESection.Featured}
+    label="Featured"
     hint="Daily change"
     rows={starred}
     emptyText="Star a pair to pin it here."
+    reorderable
     {onOpen}
   />
   <PairSection
@@ -47,7 +48,7 @@
     emptyText="No other pairs tracked."
     {onOpen}
   />
-  {#if suggested.length}
+  {#if $settings.showSuggested && suggested.length}
     <PairSection
       section={ESection.Suggested}
       label="Suggested"

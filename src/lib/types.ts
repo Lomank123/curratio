@@ -14,7 +14,9 @@ export type Settings = {
   primary: string;
   /** null until the popup resolves `prefers-color-scheme` on first open. */
   theme: ETheme | null;
-  intervalMin: RefreshInterval;
+  /** Background refresh period in seconds; 0 = only when the user clicks refresh. */
+  refreshSec: RefreshSeconds;
+  showSuggested: boolean;
   changeFormat: EChangeFormat;
   selectionConvert: boolean;
   pageConvert: boolean;
@@ -22,7 +24,7 @@ export type Settings = {
   pageConvertTarget: string | null;
 };
 
-export type RefreshInterval = 1 | 2 | 3;
+export type RefreshSeconds = 0 | 30 | 60 | 300 | 900 | 3600;
 
 export type Pair = { base: string; quote: string; starred: boolean };
 

@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { EModal } from '../../lib/enums';
   import { currentVersion } from '../../state/changelogSeen';
-  import { modal } from '../ui';
   import CardLink from './CardLink.svelte';
   import Modal from './Modal.svelte';
 
@@ -10,7 +8,7 @@
   const iconUrl = chrome.runtime.getURL('icon-128.png');
 </script>
 
-<Modal title="About" {onClose} onBack={() => modal.set(EModal.Settings)}>
+<Modal title="About" icon="info" {onClose}>
   <div class="hero">
     <img src={iconUrl} alt="" width="48" height="48" />
     <div class="title">

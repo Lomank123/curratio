@@ -14,7 +14,7 @@
     [ERefreshError.BadResponse]: 'The rate service sent an unexpected response.',
   };
 
-  const brandIconUrl = chrome.runtime.getURL('icon-16.png');
+  const brandIconUrl = chrome.runtime.getURL('icon-128.png');
 
   let refreshing = false;
   let spin = 0;
@@ -45,10 +45,10 @@
 </script>
 
 <header>
-  <span class="brand">
-    <img src={brandIconUrl} alt="" width="16" height="16" />
+  <button class="brand" on:click={() => modal.set(EModal.About)} title="About Curratio">
+    <img src={brandIconUrl} alt="" />
     Curratio
-  </span>
+  </button>
   <span class="spacer"></span>
   <button class="status" class:error on:click={refreshNow} title={statusTitle}>
     {#key spin}
@@ -58,13 +58,7 @@
     {/key}
     <span class="num">{statusText}</span>
   </button>
-  <button
-    class="icon-btn"
-    class:active={$ui.calcOpen}
-    on:click={toggleCalc}
-    title="Calculator"
-    aria-label="Toggle calculator"
-  >
+  <button class="icon-btn" on:click={toggleCalc} title="Calculator" aria-label="Toggle calculator">
     <Icon name="calc" />
   </button>
   <button
@@ -94,7 +88,20 @@
     gap: var(--space-3);
     font-weight: 600;
     font-size: var(--fs-base);
-    padding: 0 var(--space-2) 0 var(--space-1);
+    padding: 0 var(--space-2) 0 0;
+    border: none;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text);
+  }
+  .brand:hover {
+    color: var(--accent);
+  }
+  /* Same size as the toolbar buttons next to it. */
+  .brand img {
+    display: block;
+    width: var(--control);
+    height: var(--control);
   }
   .status {
     display: inline-flex;
@@ -126,9 +133,6 @@
     to {
       transform: rotate(360deg);
     }
-  }
-  .icon-btn.active {
-    color: var(--accent);
   }
   .divider {
     width: 1px;

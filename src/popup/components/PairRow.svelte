@@ -12,7 +12,7 @@
   export let suggested = false;
   export let onOpen: (pair: Pair) => void;
 
-  const { rates, prevDay, settings, pairs } = stores;
+  const { rates, prevDay, pairs, settings } = stores;
 
   $: rate = crossRate($rates?.rates, pair.base, pair.quote);
   $: prev = crossRate($prevDay?.rates, pair.base, pair.quote);
@@ -55,8 +55,8 @@
       class="lead"
       class:on={pair.starred}
       on:click={star}
-      title={pair.starred ? 'Remove bookmark' : 'Bookmark'}
-      aria-label={pair.starred ? 'Remove bookmark' : 'Bookmark'}
+      title={pair.starred ? 'Remove from Featured' : 'Add to Featured'}
+      aria-label={pair.starred ? 'Remove from Featured' : 'Add to Featured'}
     >
       <Icon name="star" size={14} filled={pair.starred} />
     </button>

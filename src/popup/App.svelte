@@ -29,7 +29,9 @@
   else document.body.removeAttribute('data-overlay');
 
   onMount(() => {
-    const stale = !$rates || Date.now() - $rates.fetchedAt > $settings.intervalMin * 60_000;
+    // With background refresh off, rates only update when the user clicks the timer.
+    const { refreshSec } = $settings;
+    const stale = !$rates || (refreshSec > 0 && Date.now() - $rates.fetchedAt > refreshSec * 1000);
     if (stale) void chrome.runtime.sendMessage({ type: EMessageType.Refresh });
   });
 

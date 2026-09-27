@@ -1,7 +1,7 @@
 import { get, writable, type Readable } from 'svelte/store';
 import { ETheme } from '../lib/enums';
 import type { Pair, PrevDayState, RatesState, Settings, StatusState, UiState } from '../lib/types';
-import { defaultPairs, defaultSettings, defaultUi } from '../state/defaults';
+import { defaultPairs, defaultUi, withDefaults } from '../state/defaults';
 import { STORAGE_KEYS } from '../state/keys';
 import { onChange, read, write, type StorageShape } from '../state/storage';
 
@@ -77,7 +77,7 @@ export async function initStores(): Promise<Stores> {
     read(STORAGE_KEYS.prevDay),
     read(STORAGE_KEYS.status),
   ]);
-  const s = settings ?? defaultSettings(navigator.language);
+  const s = withDefaults(settings, navigator.language);
   stores = {
     settings: persisted(STORAGE_KEYS.settings, s),
     pairs: persisted(STORAGE_KEYS.pairs, pairs ?? defaultPairs(s.primary)),

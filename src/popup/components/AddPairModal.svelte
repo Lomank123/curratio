@@ -43,7 +43,7 @@
   }
 </script>
 
-<Modal title="Track a pair" icon="plus" {onClose}>
+<Modal title="Track a pair" {onClose}>
   <div class="pick">
     <div class="field">
       <span class="caps">Base</span>
@@ -73,7 +73,7 @@
   </div>
   <label class="check">
     <input type="checkbox" bind:checked={star} />
-    <span>Add to bookmarks</span>
+    <span>Add to Featured</span>
   </label>
   <div class="actions">
     <button class="btn" on:click={onClose}>Cancel</button>

@@ -1,9 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { CHANGELOG } from '../../changelog';
-  import { EModal } from '../../lib/enums';
   import { markVersionSeen } from '../../state/changelogSeen';
-  import { modal } from '../ui';
   import Modal from './Modal.svelte';
 
   export let onClose: () => void;
@@ -11,7 +9,7 @@
   onMount(() => void markVersionSeen());
 </script>
 
-<Modal title="Changelog" icon="file" {onClose} onBack={() => modal.set(EModal.Settings)}>
+<Modal title="Changelog" icon="file" {onClose}>
   <div class="entries">
     {#each CHANGELOG as entry, i (entry.version)}
       <section class:latest={i === 0}>
