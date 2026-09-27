@@ -9,7 +9,8 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint",
     "format": "prettier --write",
-    "icons": "node scripts/render-icons.mjs"
+    "icons": "node scripts/render-icons.mjs",
+    "package:store": "bash scripts/package-store.sh"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.28",

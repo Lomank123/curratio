@@ -10,10 +10,12 @@ const icons = {
 
 export default defineManifest({
   manifest_version: 3,
-  name: 'Curratio',
+  // Store listing title (≤75 chars) and summary (≤132 chars) come from these two fields.
+  name: 'Curratio – Currency Converter & Live Exchange Rates',
+  short_name: 'Curratio',
   version: pkg.version,
   description:
-    'Live exchange rates, a converter, and instant price conversion on any page. Free, local, no tracking.',
+    'Live exchange rates for 160+ currencies, a two-way converter, and instant conversion of prices you select or see on any web page.',
   icons,
   action: {
     default_popup: 'src/popup/index.html',
