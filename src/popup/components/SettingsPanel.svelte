@@ -3,7 +3,9 @@
   import { EChangeFormat, EPickerTarget, ETheme } from '../../lib/enums';
   import type { RefreshSeconds, Settings } from '../../lib/types';
   import { stores } from '../stores';
-  import { pickCurrency } from '../ui';
+  import { siteAccess } from '../siteAccess';
+  import { confirmSiteAccess, pickCurrency } from '../ui';
+  import { ALL_SITES, hostOf, revokeSiteAccess } from '../../state/siteAccess';
   import Icon from './Icon.svelte';
   import Modal from './Modal.svelte';
   import Segmented from './Segmented.svelte';
@@ -22,6 +24,11 @@
     { label: 'Off', value: 0 },
   ];
 
+  const CHANGE_FORMATS: { label: string; value: EChangeFormat }[] = [
+    { label: 'Percentage', value: EChangeFormat.Percent },
+    { label: 'Actual value', value: EChangeFormat.Value },
+  ];
+
   $: s = $settings;
   $: pageTarget = s.pageConvertTarget ?? s.primary;
 
@@ -32,6 +39,19 @@
   async function pickPrimary() {
     const res = await pickCurrency(EPickerTarget.Primary, s.primary);
     if (res?.code) patch({ primary: res.code });
+  }
+
+  $: access = $siteAccess;
+  $: canAllowCurrent =
+    !!access.currentOrigin && !access.allSites && !access.origins.includes(access.currentOrigin);
+
+  function toggleAllSites() {
+    if (access.allSites) void revokeSiteAccess(ALL_SITES);
+    else void confirmSiteAccess(ALL_SITES);
+  }
+
+  function allowCurrent() {
+    if (access.currentOrigin) void confirmSiteAccess(access.currentOrigin);
   }
 
   async function pickPageTarget() {
@@ -60,21 +80,23 @@
       : 'Rates update only when you click the timer in the top bar.'}
   </p>
 
+  <h3 class="caps">Show daily change as</h3>
+  <Segmented
+    options={CHANGE_FORMATS}
+    value={s.changeFormat}
+    onPick={(v) => patch({ changeFormat: v })}
+  />
+  <p class="note">
+    How much each pair moved since yesterday: as a share of the rate (+0.23%) or as the rate's own
+    difference (1.0850 → 1.0875 shows +0.0025).
+  </p>
+
   <h3 class="caps">Display</h3>
   <div class="stack">
     <Toggle
       label="Show suggested pairs"
       checked={s.showSuggested}
       onToggle={() => patch({ showSuggested: !s.showSuggested })}
-    />
-    <Toggle
-      label="Show change as actual value"
-      checked={s.changeFormat === EChangeFormat.Value}
-      onToggle={() =>
-        patch({
-          changeFormat:
-            s.changeFormat === EChangeFormat.Value ? EChangeFormat.Percent : EChangeFormat.Value,
-        })}
     />
     <Toggle
       label="Dark mode"
@@ -109,6 +131,36 @@
       </button>
     {/if}
   </div>
+
+  <h3 class="caps">Website access</h3>
+  <Toggle label="Allow on all websites" checked={access.allSites} onToggle={toggleAllSites} />
+  {#if !access.allSites}
+    {#if access.origins.length}
+      <div class="sites">
+        {#each access.origins as origin (origin)}
+          <div class="site">
+            <Icon name="globe" size={14} class="muted" />
+            <span class="spacer">{hostOf(origin)}</span>
+            <button
+              class="remove"
+              on:click={() => revokeSiteAccess(origin)}
+              title="Remove access"
+              aria-label={`Remove access to ${hostOf(origin)}`}>✕</button
+            >
+          </div>
+        {/each}
+      </div>
+    {/if}
+    {#if canAllowCurrent && access.currentOrigin}
+      <button class="dashed-btn allow" on:click={allowCurrent}>
+        + Allow on {hostOf(access.currentOrigin)}
+      </button>
+    {/if}
+  {/if}
+  <p class="note">
+    Prices are converted only on sites you allow. Allow the current site from the popup, or all
+    websites here.
+  </p>
 </Modal>
 
 <style>
@@ -147,5 +199,39 @@
   }
   .code {
     font-weight: 600;
+  }
+  .sites {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .site {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+    font-size: var(--fs-md);
+  }
+  .site + .site {
+    border-top: 1px solid var(--border);
+  }
+  .remove {
+    width: var(--control-sm);
+    height: var(--control-sm);
+    padding: 0;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+  }
+  .remove:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .allow {
+    margin-top: var(--space-2);
   }
 </style>

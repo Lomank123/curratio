@@ -32,6 +32,8 @@ export type UiState = {
   calcOpen: boolean;
   calc: { from: string; to: string; amount: string; side: ECalcSide };
   collapsed: Record<ESection, boolean>;
+  /** Sites where the user dismissed the "Allow on this site" bar. */
+  hiddenAccessOrigins?: string[];
 };
 
 export type RatesState = { rates: UsdRates; fetchedAt: number; source: ERateSource };

@@ -38,6 +38,8 @@ WHAT IT DOES
 
 ON ANY WEB PAGE
 
+• Only where you allow it — Curratio asks before touching any site, one site at a time or all
+  websites at once.
 • Select a price — highlight "$19.99", "1.234,56 €", "12,50 zł" or "USD 100" and a small card
   shows the amount in your primary currency.
 • Convert whole pages (optional) — turn it on and every foreign price on the page is shown in
@@ -51,6 +53,9 @@ Light and dark themes included.
 
 
 PRIVACY
+
+Curratio installs with no access to the websites you visit. You allow it site by site (or on all
+websites, if you prefer), and you can remove access at any time.
 
 Everything Curratio stores — your pairs, settings and the latest rates — stays in your browser.
 Price detection happens locally on the page. Nothing you browse, select or read is ever
@@ -97,10 +102,36 @@ The background worker downloads public exchange-rate tables (JSON) from these ho
 
 The requests carry no user data. No other hosts are contacted.
 
-### Content script on all sites (`<all_urls>`)
+### `scripting`
 
-The extension's core feature is converting prices on the pages the user visits, and those can be
-on any website. The content script:
+Registers the price-conversion content script with `chrome.scripting.registerContentScripts`, and
+injects it into tabs that are already open. The script is registered only for the sites the user has
+allowed (see the optional host permission below). The list is updated as sites are allowed or
+removed, and the script is unregistered when no site is allowed. There is no static content
+script in the manifest.
+
+### `activeTab`
+
+Reads the URL of the current tab while the popup is open. This lets the popup offer "Allow on
+<this site>" and show whether the site is already allowed. It is used only while the popup is
+open.
+
+### Optional host permission `<all_urls>`
+
+This is declared in `optional_host_permissions` and is **never requested at install**. Curratio
+installs with no access to any website. Access is requested on demand, **one site at a time**:
+
+- The popup offers "Allow" for the site the user is on.
+- Settings has "+ Allow on <site>".
+
+The user can also choose "Allow on all websites" in Settings. Every request first shows an
+in-app screen explaining what the access is used for, then Chrome's own permission prompt for
+that exact site, or for all sites. Settings lists every allowed site with a remove button, and
+access can also be revoked from Chrome.
+
+`<all_urls>` is declared as the optional pattern so that any site the user picks can be
+requested. Only the sites the user approves are ever granted. On those sites, the content
+script:
 
 - reads the user's text selection (up to 64 characters) to detect a price and show a small
   conversion card, and
@@ -109,8 +140,7 @@ on any website. The content script:
 
 All processing is local. Page content, selections and URLs are never stored or transmitted. The
 script makes no network requests; it only reads rates the extension has already stored.
-Restricting it to specific sites would break the feature, because users expect it to work
-wherever prices appear.
+Without the grant, the popup (rates and converter) works fully and no script runs on any page.
 
 ### Remote code
 
@@ -162,12 +192,17 @@ These are uploaded to the dashboard only and aren't part of the extension packag
 ```
 No login or setup is needed. Rates load automatically a few seconds after install.
 
-1. Open the popup: rates, the converter and featured pairs are shown.
-2. On any page with a price (e.g. a shop listing "$19.99"), select the price: a small card shows
-   it converted into the primary currency (set in ⋮ → Settings; default follows browser locale).
-   Prices already in the primary currency show no card, by design.
-3. In ⋮ → Settings, turn on "Convert all prices on pages", then open or reload a shop page:
-   foreign prices are shown converted, hover shows the original. Turning it off restores them.
+1. Open the popup: rates, the converter and featured pairs are shown. No site access is
+   needed for this.
+2. Open a shop page (e.g. one listing "$19.99"), then open the popup. A bar offers
+   "Convert prices on <site>? Allow". Click Allow, then Continue on the explanation screen, then
+   Allow in Chrome's prompt. Access can also be given to all websites in ⋮ → Settings → Website
+   access.
+3. On that page with a price (e.g. a shop listing "$19.99"), select the price: a small card shows
+   it converted into the primary currency (Settings → Primary currency; default follows the
+   browser locale). Prices already in the primary currency show no card, by design.
+4. Turn on "Convert all prices on pages", then open a shop page: foreign prices are shown
+   converted, hover shows the original. Turning it off restores them.
 ```
 
 ## Publisher settings (Settings page, not the item)

@@ -9,9 +9,11 @@
   import CurrencyPicker from './components/CurrencyPicker.svelte';
   import PairList from './components/PairList.svelte';
   import SettingsPanel from './components/SettingsPanel.svelte';
+  import SiteAccessBar from './components/SiteAccessBar.svelte';
+  import SiteAccessConfirm from './components/SiteAccessConfirm.svelte';
   import TopBar from './components/TopBar.svelte';
   import { stores } from './stores';
-  import { modal, picker, type PickResult } from './ui';
+  import { accessPrompt, modal, picker, type PickResult } from './ui';
 
   const { settings, ui, rates } = stores;
 
@@ -55,7 +57,10 @@
 
   function onKey(e: KeyboardEvent) {
     if (e.key !== 'Escape') return;
-    if ($picker) finishPick(null);
+    if ($accessPrompt) {
+      $accessPrompt.resolve(false);
+      accessPrompt.set(null);
+    } else if ($picker) finishPick(null);
     else if ($modal) closeModal();
     else return;
     e.preventDefault();
@@ -68,6 +73,7 @@
 <main>
   <TopBar />
   {#if $ui.calcOpen}<Converter />{/if}
+  <SiteAccessBar />
   <PairList onOpen={openPair} />
 
   {#if $modal === EModal.Add}
@@ -78,6 +84,10 @@
     <AboutPanel onClose={closeModal} />
   {:else if $modal === EModal.Changelog}
     <ChangelogPanel onClose={closeModal} />
+  {/if}
+
+  {#if $accessPrompt}
+    <SiteAccessConfirm request={$accessPrompt} onDone={() => accessPrompt.set(null)} />
   {/if}
 
   {#if $picker}

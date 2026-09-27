@@ -501,7 +501,7 @@ extension in Chrome and testing on real pages is a manual step for the user, des
   - Off means no alarm. Rates update only from the top-bar timer, or once on startup if nothing
     is cached yet.
   - The popup's stale check on open is skipped when Off.
-- **Pips replaced by actual value**: the "Show change as actual value" toggle (Display) sets
+- **Pips replaced by actual value**: the "Show daily change as" segmented control (Percentage | Actual value) sets
   `settings.changeFormat` to `EChangeFormat.Value | Percent`. Value mode shows the raw rate delta
   with the rate's own decimals (`rateDecimals`), e.g. `+0.0025`.
 - **`settings.showSuggested`** (default true) is a "Show suggested pairs" toggle under Display.
@@ -518,3 +518,47 @@ extension in Chrome and testing on real pages is a manual step for the user, des
 - **Top bar:**
   - The calculator button no longer changes colour when active.
   - The brand icon is sized to the toolbar buttons (`--control`, 26 px).
+
+## 15. Revision — on-demand website access (supersedes §3 and §9's static content script)
+
+- **Manifest:** no `content_scripts`. `optional_host_permissions: ['<all_urls>']`, and
+  `permissions` gains `scripting`.
+- **Worker** (`src/background/contentScript.ts`, `syncContentScript()`):
+  - While `<all_urls>` is granted, it registers `src/content/index.ts?script` (crxjs loader) with
+    `chrome.scripting.registerContentScripts`, using id `curratio-content` and
+    `persistAcrossSessions`. On grant, it also injects the script into already-open http(s) tabs.
+  - When access is revoked, it unregisters the script.
+  - It runs on install/startup and on `permissions.onAdded` / `onRemoved`.
+- **Popup:**
+  - `siteAccess` is a store that follows grants live.
+  - The web-page toggles in Settings show `setting && siteAccess`.
+  - Turning one on without access opens `SiteAccessConfirm`, an in-app explanation with Cancel /
+    Continue. Continue saves the setting, then calls `chrome.permissions.request` inside the same
+    click. If the user declines, the setting is reverted. The setting is saved before the prompt
+    in case the popup closes while Chrome's prompt is showing.
+  - When access is granted, Settings shows "Website access allowed · Revoke".
+
+## 16. Revision — per-site access (supersedes §15's all-sites-only flow)
+
+- **Manifest:** `permissions` also includes `activeTab`, so the popup can read the current tab's
+  URL. `optional_host_permissions` stays `['<all_urls>']`, which lets any single origin
+  (`https://host/*`) be requested.
+- **`src/state/siteAccess.ts`:** `readSiteGrants()` returns `{ allSites, origins }`, excluding
+  the required rate hosts. It also has `requestSiteAccess(pattern)` / `revokeSiteAccess(pattern)`.
+- **Worker:**
+  - The content script is registered with `matches = allSites ? ['<all_urls>'] : origins`. The
+    list is updated on every grant or revoke, and the script is unregistered when it's empty.
+  - `permissions.onAdded` injects the script into open tabs on the newly added origins.
+- **Popup:**
+  - `SiteAccessBar` appears under the converter when the current http(s) tab isn't allowed and
+    either web feature is on. It reads "Convert prices on <host>? Allow" with a ✕. ✕ adds the
+    origin to `ui.hiddenAccessOrigins`, so the bar stays hidden for that site.
+  - Every grant goes through `SiteAccessConfirm` (site- or all-sites wording), then
+    `chrome.permissions.request`.
+- **Settings:**
+  - The web feature toggles are plain settings again, no longer gated on access.
+  - A new "Website access" section has:
+    - an "Allow on all websites" toggle (grant goes through confirm; revoke is direct)
+    - the list of allowed hosts, each with ✕
+    - "+ Allow on <current host>"
+    - a short note.

@@ -23,19 +23,14 @@ export default defineManifest({
     default_icon: icons,
   },
   background: { service_worker: 'src/background/worker.ts', type: 'module' },
-  permissions: ['storage', 'alarms'],
+  permissions: ['storage', 'alarms', 'scripting', 'activeTab'],
   host_permissions: [
     'https://api.coinbase.com/*',
     'https://cdn.jsdelivr.net/*',
     'https://currency-api.pages.dev/*',
     'https://*.currency-api.pages.dev/*',
   ],
-  content_scripts: [
-    {
-      matches: ['<all_urls>'],
-      js: ['src/content/index.ts'],
-      run_at: 'document_idle',
-      all_frames: false,
-    },
-  ],
+  // Website access is requested on demand, per site or for all sites. The worker
+  // (src/background/contentScript.ts) registers the content script only on granted sites.
+  optional_host_permissions: ['<all_urls>'],
 });

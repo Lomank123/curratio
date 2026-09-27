@@ -13,6 +13,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Primary currency with suggested pairs',
       'Convert selected prices on any page',
       'Optionally convert all prices on a page',
+      'Website access on demand: allow price conversion site by site, or on all websites',
       'Background refresh from every 30 seconds to hourly, dark and light themes',
     ],
   },

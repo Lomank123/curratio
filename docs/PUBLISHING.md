@@ -48,13 +48,13 @@ The title and summary come from the manifest. See `docs/STORE_SUBMISSION.md`.
 
 ### Privacy
 
-| Field                     | Source                                                                                 |
-| ------------------------- | -------------------------------------------------------------------------------------- |
-| Single purpose            | `docs/STORE_SUBMISSION.md` → Single purpose                                            |
-| Permission justifications | One per permission: `storage`, `alarms`, host permissions, content script on all sites |
-| Remote code               | "No, I am not using remote code"                                                       |
-| Data use disclosures      | Leave data types unchecked and certify all three statements                            |
-| Privacy policy URL        | The URL from step 1                                                                    |
+| Field                     | Source                                                                                                     |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Single purpose            | `docs/STORE_SUBMISSION.md` → Single purpose                                                                |
+| Permission justifications | One per permission: `storage`, `alarms`, `scripting`, `activeTab`, host permissions, optional `<all_urls>` |
+| Remote code               | "No, I am not using remote code"                                                                           |
+| Data use disclosures      | Leave data types unchecked and certify all three statements                                                |
+| Privacy policy URL        | The URL from step 1                                                                                        |
 
 ### Distribution
 
@@ -66,9 +66,9 @@ Paste the block from `docs/STORE_SUBMISSION.md` → Test instructions.
 
 ## 5. Submit
 
-Submit for review. The content script on all sites usually triggers an in-depth review, which
-can take longer than usual. Once approved, you have **30 days** to publish before the submission
-reverts to a draft.
+Submit for review. All-sites access is optional and requested at runtime, which makes an
+in-depth review less likely than install-time `<all_urls>` (but not guaranteed). Once approved,
+you have **30 days** to publish before the submission reverts to a draft.
 
 ## Updating later
 

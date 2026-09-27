@@ -24,7 +24,13 @@ None of this leaves your browser.
 
 ## Web pages you visit
 
-To convert prices, Curratio runs a script on the pages you open.
+Curratio installs with **no access** to the websites you visit. You choose where price conversion
+works: on a single site (from the popup, while you're on that site) or on all websites (in
+Settings). Before each request, Curratio explains what the access is for, and Chrome asks you to
+confirm. Settings lists every site you've allowed, so you can remove any of them, or remove access
+in Chrome's extension settings. Curratio never runs a script on sites you haven't allowed.
+
+On the sites you allow, Curratio runs a script on the pages you open.
 
 - **Selected prices:** when you select text, the script reads only the selected text (up to 64
   characters) to check whether it contains a price.

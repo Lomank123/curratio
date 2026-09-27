@@ -2,6 +2,7 @@ import { EMessageType } from '../lib/enums';
 import { defaultPairs, defaultUi, withDefaults } from '../state/defaults';
 import { STORAGE_KEYS } from '../state/keys';
 import { onChange, read, write } from '../state/storage';
+import { injectIntoOpenTabs, syncContentScript } from './contentScript';
 import { refresh } from './refresh';
 
 const ALARM = 'curratio-refresh';
@@ -37,6 +38,7 @@ async function ensureAlarm(): Promise<void> {
 async function boot(): Promise<void> {
   await seedDefaults();
   await ensureAlarm();
+  await syncContentScript();
   const settings = await read(STORAGE_KEYS.settings);
   // With refresh off, only fetch when there is nothing cached yet.
   if (settings?.refreshSec || !(await read(STORAGE_KEYS.rates))) await refresh();
@@ -50,6 +52,11 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 onChange(STORAGE_KEYS.settings, () => void ensureAlarm());
+
+chrome.permissions.onAdded.addListener(({ origins = [] }) => {
+  void syncContentScript().then(() => injectIntoOpenTabs(origins));
+});
+chrome.permissions.onRemoved.addListener(() => void syncContentScript());
 
 chrome.runtime.onMessage.addListener((msg: { type?: EMessageType }, _sender, sendResponse) => {
   if (msg?.type !== EMessageType.Refresh) return false;

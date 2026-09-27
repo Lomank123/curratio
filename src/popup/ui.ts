@@ -23,3 +23,16 @@ export function pickCurrency(
 ): Promise<PickResult | null> {
   return new Promise((resolve) => picker.set({ target, selected, allowPrimary, resolve }));
 }
+
+export type AccessPromptRequest = {
+  /** A site origin (`https://host/*`) or `<all_urls>`. */
+  pattern: string;
+  resolve: (granted: boolean) => void;
+};
+
+export const accessPrompt = writable<AccessPromptRequest | null>(null);
+
+/** Show the website-access confirm screen, then Chrome's permission prompt. */
+export function confirmSiteAccess(pattern: string): Promise<boolean> {
+  return new Promise((resolve) => accessPrompt.set({ pattern, resolve }));
+}

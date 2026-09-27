@@ -30,7 +30,13 @@ get the new content script.
 - Settings → change primary currency: Suggested section updates.
 - Settings → refresh interval 30s … 1h and Off (Off: status only updates when clicking the timer).
 - Drag Featured rows to reorder; the order survives reopening the popup.
-- Settings → toggles for suggested pairs and "Show change as actual value".
+- Settings → "Show daily change as" Percentage / Actual value; "Show suggested pairs" toggle.
+- Fresh install: no site access. On a shop page, open the popup → "Convert prices on <site>? Allow"
+  → confirm screen → Continue → Chrome's prompt (names that site) → Allow. The open tab starts
+  working without a reload. ✕ on the bar hides it for that site. Cancel or Deny grants nothing.
+- Settings → Website access: the allowed site is listed with ✕; "+ Allow on <current site>" when
+  it isn't; "Allow on all websites" toggle shows the confirm screen, then Chrome's prompt.
+  Removing access stops newly loaded pages (already-open tabs keep converting until reloaded).
 - Select `$19.99` on amazon.com → a card shows the amount in your primary currency.
 - Enable **Convert all prices on pages** → prices on amazon.com (split markup) and a `€` price on
   a `.de` shop are replaced; hover shows the original. Turn it off → originals come back.
