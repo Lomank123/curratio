@@ -1,0 +1,6 @@
+design
+node_modules
+.env
+dist
+*.log
+*.zip

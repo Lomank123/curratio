@@ -1,0 +1,82 @@
+/* Design tokens from the Curratio design (FX Rates Popup v2). Shared by the popup (:root)
+   and the content-script shadow root (:host). */
+:root,
+:host {
+  --font: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --fs-xs: 10px;
+  --fs-sm: 11px;
+  --fs-md: 12px;
+  --fs-base: 13px;
+  --fs-lg: 15px;
+  --fs-xl: 16px;
+  --fs-amount: 20px;
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-8: 16px;
+  --space-btn-y: 5px;
+  --space-row-y: 7px;
+  --control-sm: 22px;
+  --control: 26px;
+  --control-md: 32px;
+  --popup-w: 380px;
+  --panel-w: 350px;
+  --list-max-h: 300px;
+  --selection-card-w: 260px;
+  --shadow-menu: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --backdrop: rgba(0, 0, 0, 0.45);
+  --knob: #ffffff;
+  --knob-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --tracking-caps: 0.04em;
+  --z-max: 2147483647;
+}
+
+:root[data-theme='dark'],
+:host([data-theme='dark']) {
+  --bg: #13191e;
+  --surface: #1a2228;
+  --border: #2a353e;
+  --text: #e6ebee;
+  --text-muted: #8c99a3;
+  --accent: #e6a53a;
+  --accent-soft: rgba(230, 165, 58, 0.14);
+  --on-accent: #1c1404;
+  --focus-ring: rgba(230, 165, 58, 0.35);
+  --danger: #f07a6b;
+  --up: #5fd39a;
+  --up-soft: rgba(95, 211, 154, 0.13);
+  --down: #f07a6b;
+  --down-soft: rgba(240, 122, 107, 0.13);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.22);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.34);
+  --card-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme='light'],
+:host([data-theme='light']) {
+  --bg: #fbfaf7;
+  --surface: #f2efe8;
+  --border: #dfd9cd;
+  --text: #22211e;
+  --text-muted: #6f6a60;
+  --accent: #a8650f;
+  --accent-soft: rgba(168, 101, 15, 0.1);
+  --on-accent: #ffffff;
+  --focus-ring: rgba(168, 101, 15, 0.25);
+  --danger: #c2412f;
+  --up: #1d7f4e;
+  --up-soft: rgba(29, 127, 78, 0.1);
+  --down: #c2412f;
+  --down-soft: rgba(194, 65, 47, 0.09);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.28);
+  --card-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}

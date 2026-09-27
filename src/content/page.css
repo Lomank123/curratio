@@ -1,0 +1,7 @@
+/* Injected once into the page <head>. Marks converted prices without hardcoding any color. */
+
+[data-curratio] {
+  text-decoration: underline dotted currentColor;
+  text-underline-offset: 2px;
+  cursor: help;
+}

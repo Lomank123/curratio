@@ -1,0 +1,172 @@
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  position: relative;
+  margin: 0;
+  width: var(--popup-w);
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* Room for overlays: the popup can't grow past its content otherwise. */
+body[data-overlay='compact'] {
+  min-height: 330px;
+}
+body[data-overlay='picker'] {
+  min-height: 380px;
+}
+body[data-overlay='tall'] {
+  min-height: 430px;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* 26px square icon button (top bar). */
+.icon-btn {
+  width: var(--control);
+  height: var(--control);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: var(--radius);
+}
+.icon-btn:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+}
+
+/* Borderless ghost icon button (close ✕, star, back). */
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  font-size: var(--fs-base);
+}
+.ghost-btn:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+/* Small accent text button ("Copy", "+ track"). */
+.link-btn {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--fs-sm);
+}
+.link-btn:hover {
+  background: var(--surface);
+}
+
+/* Dashed accent button ("+ track pair"). */
+.dashed-btn {
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--accent);
+  border-radius: var(--radius);
+  padding: var(--space-btn-y) var(--space-4);
+  font-size: var(--fs-md);
+}
+.dashed-btn:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: var(--space-btn-y) var(--space-5);
+  font-size: var(--fs-md);
+}
+.btn:hover {
+  border-color: var(--accent);
+}
+.btn-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.caps {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.empty-box {
+  padding: var(--space-4);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+}
